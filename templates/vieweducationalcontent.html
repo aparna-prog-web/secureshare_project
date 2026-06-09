@@ -1,0 +1,71 @@
+
+
+{% extends "adminindex.html" %}
+{% block body %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Educational Content</title>
+  <!-- Bootstrap CSS -->
+{#  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">#}
+  <!-- DataTables CSS -->
+  <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container mt-5">
+    <h2 class="mb-4">Educational Content</h2>
+    <table id="registrationTable" class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Content</th>
+          <th> </th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for i in data %}
+        <!-- Sample Data Row -->
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ i.date }}</td>
+          <td>{{ i.time }}</td>
+            <td>
+    {% if i.type == 'image' %}
+        <img src="{{ i.content }}" height="100" width="100">
+    {% elif i.type == 'video' %}
+        <video width="150" height="100" controls>
+            <source src="{{ i.content }}" type="video/mp4">
+        </video>
+    {% endif %}
+</td>
+
+{#          <td><img src="{{ i.content }}" height="100" width="100"></td>#}
+        <td>
+            <a href="/myapp/editeducationalcontent_get/{{ i.id }}#abc" class="btn btn-primary">Edit</a>
+            <a href="/myapp/deleteeducationalcontent_get/{{ i.id }}" class="btn btn-danger">Delete</a>
+        </td>
+
+        </tr>
+      {% endfor %}
+
+        <!-- Add more rows dynamically from backend -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('#registrationTable').DataTable();
+    });
+  </script>
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends "adminindex.html" %}
+
+{% block extra_css %}
+<link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+
+<div class="container mt-5">
+  <h3 class="mb-4">View Review</h3>
+
+  <!-- Date Filter -->
+  <div class="row mb-3">
+    <div class="col-md-4">
+      <label>From Date:</label>
+      <input type="date" id="minDate" class="form-control">
+    </div>
+    <div class="col-md-4">
+      <label>To Date:</label>
+      <input type="date" id="maxDate" class="form-control">
+    </div>
+  </div>
+
+  <table id="registrationTable" class="table table-striped table-bordered">
+    <thead class="table-dark">
+      <tr>
+        <th>Sl. No.</th>
+        <th>Date</th>
+        <th>From</th>
+        <th>Review</th>
+        <th>Rating</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for i in data %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ i.date|date:"Y-m-d" }}</td>
+        <td>{{ i.CUSTOMER.name }}</td>
+        <td>{{ i.review }}</td>
+        <td>{{ i.rating }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+</div>
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+  <script>
+    // Extend DataTables with custom date filtering
+    // Initialize DataTable and bind filter events
+    $(document).ready(function () {
+      const table = $('#registrationTable').DataTable({
+        pageLength: 5
+      });
+
+      $('#fromDate, #toDate').on('change', function () {
+        table.draw();
+      });
+    });
+  </script>
+</body>
+</html>
+{% endblock %}

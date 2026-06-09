@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureShare | Login</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #000000;
+            --accent: #00D4FF;
+            --card-bg: rgba(15, 15, 26, 0.85);
+            --glow: rgba(0, 212, 255, 0.6);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            color: white;
+            overflow: hidden;
+        }
+
+        /* Ambient glowing blobs */
+        .blob {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: var(--glow);
+            filter: blur(120px);
+            border-radius: 50%;
+            z-index: -1;
+            opacity: 0.15;
+        }
+
+        .blob1 { top: -200px; left: -200px; }
+        .blob2 { bottom: -200px; right: -200px; background: rgba(99, 102, 241, 0.1); }
+
+        .login-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 24px;
+            padding: 3.5rem 2.5rem;
+            width: 100%;
+            max-width: 460px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            transition: transform 0.3s ease;
+        }
+
+        .login-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .logo-area {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .logo-glow {
+            position: relative;
+            display: inline-block;
+        }
+
+        .logo-icon {
+            font-size: 5.5rem;
+            color: var(--accent);
+            filter: drop-shadow(0 0 20px var(--glow));
+        }
+
+        .logo-text {
+            font-weight: 800;
+            font-size: 2.8rem;
+            background: linear-gradient(90deg, #ffffff, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.02em;
+            margin-top: 0.5rem;
+        }
+
+        .subtitle {
+            color: rgba(255,255,255,0.7);
+            font-size: 1.1rem;
+            margin-top: 0.5rem;
+        }
+
+        .form-group {
+            position: relative;
+            margin-bottom: 1.8rem;
+        }
+
+        .form-label {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0.6rem;
+            display: block;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .form-control {
+            height: 54px;
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(255,255,255,0.05);
+            color: white;
+            padding-left: 1.2rem;
+            font-size: 1rem;
+            transition: all 0.25s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.15);
+            background: rgba(255,255,255,0.08);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--accent);
+            font-size: 1.3rem;
+            pointer-events: none;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255,255,255,0.6);
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .btn-submit {
+            background: linear-gradient(90deg, var(--accent), #00aaff);
+            color: black;
+            border: none;
+            width: 100%;
+            height: 54px;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-top: 1.5rem;
+            transition: all 0.25s ease;
+            box-shadow: 0 10px 25px rgba(0, 212, 255, 0.25);
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(0, 212, 255, 0.35);
+        }
+
+        .forgot-link {
+            color: var(--accent);
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+
+        .forgot-link:hover {
+            color: #00aaff;
+        }
+
+        .register-link {
+            color: var(--accent);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .register-link:hover {
+            text-decoration: underline;
+        }
+
+        .divider {
+            margin: 2.5rem 0;
+            display: flex;
+            align-items: center;
+            color: rgba(255,255,255,0.5);
+            font-size: 0.9rem;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .divider span {
+            padding: 0 1.5rem;
+        }
+
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 2.5rem 1.5rem;
+                margin: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="blob blob1"></div>
+    <div class="blob blob2"></div>
+
+    <div class="login-card">
+        <div class="logo-area">
+            <div class="logo-glow">
+                <i class="fas fa-shield-halved logo-icon"></i>
+            </div>
+            <span class="logo-text">SecureShare</span>
+            <p class="subtitle">Secure. Private. Yours.</p>
+        </div>
+
+        <form method="post" action="/myapp/login_post/">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label class="form-label">Email or Username</label>
+                <input type="text" class="form-control" name="username" placeholder="Enter your email or username" required autofocus>
+            </div>
+
+            <div class="form-group position-relative">
+                <div class="d-flex justify-content-between align-items-center">
+                    <label class="form-label">Password</label>
+                    <a href="/myapp/forgetpassword_get/" class="forgot-link">Forgot Password?</a>
+                </div>
+                <input type="password" class="form-control" name="password" placeholder="••••••••" required id="passwordInput">
+                <i class="fas fa-eye-slash password-toggle" id="togglePassword" onclick="togglePassword()"></i>
+            </div>
+
+            <button type="submit" class="btn-submit">Sign In</button>
+        </form>
+
+
+
+
+    </div>
+
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('passwordInput');
+            const toggleIcon = document.getElementById('togglePassword');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            }
+        }
+    </script>
+
+</body>
+</html>
+
+
+
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <meta name="viewport" content="width=device-width, initial-scale=1.0">#}
+{#    <title>Login Page</title>#}
+{#    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">#}
+{##}
+{#</head>#}
+{#<body>#}
+{#    <div class="container">#}
+{#        <div class="row justify-content-center">#}
+{#            <div class="col-md-6">#}
+{#                <h2 class="text-center">Login</h2>#}
+{#                <form method="post" action="/myapp/login_post/">#}
+{#                    {% csrf_token %}#}
+{#                    <div class="form-group">#}
+{#                        <label for="username">Username</label>#}
+{#                        <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" required>#}
+{#                    </div>#}
+{#                    <div class="form-group">#}
+{#                        <label for="password">Password</label>#}
+{#                        <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>#}
+{#                    </div>#}
+{#                    <button type="submit" class="btn btn-primary btn-block">Login</button>#}
+{#                </form>#}
+{#                <div class="text-center mt-3">#}
+{#                    <a href="#">Forgot Password?</a>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{#    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>#}
+{#    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>#}
+{#    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>#}
+{#</body>#}
+{#</html>#}
+
+
+
+{##}
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#  <meta charset="UTF-8" />#}
+{#  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>#}
+{#  <title>Login Page</title>#}
+{#  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>#}
+{#  <style>#}
+{#    * {#}
+{#      box-sizing: border-box;#}
+{#    }#}
+{##}
+{#    body, html {#}
+{#      margin: 0;#}
+{#      padding: 0;#}
+{#      height: 100%;#}
+{#      font-family: 'Poppins', sans-serif;#}
+{#      background-color: #1e1e2f;#}
+{#      color: white;#}
+{#    }#}
+{##}
+{#    .container-fluid {#}
+{#      height: 100vh;#}
+{#      display: flex;#}
+{#      flex-direction: row;#}
+{#    }#}
+{##}
+{#    .left-panel {#}
+{#      flex: 1;#}
+{#      background: url('https://media.istockphoto.com/id/926196952/photo/beautiful-nature-background.jpg?s=170667a&w=0&k=20&c=3CI8wa6kKzgUv09X_rQhermyjeGhaAlp9HiAe9v65rE=') no-repeat center center;#}
+{#      background-size: cover;#}
+{#      position: relative;#}
+{#      display: flex;#}
+{#      align-items: flex-end;#}
+{#      padding: 40px;#}
+{#    }#}
+{##}
+{#    .left-panel h4 {#}
+{#      color: white;#}
+{#      font-size: 20px;#}
+{#      font-weight: 500;#}
+{#    }#}
+{##}
+{#    .right-panel {#}
+{#      flex: 1;#}
+{#      background-color: #262338;#}
+{#      display: flex;#}
+{#      align-items: center;#}
+{#      justify-content: center;#}
+{#      padding: 40px;#}
+{#    }#}
+{##}
+{#    .form-container {#}
+{#      width: 100%;#}
+{#      max-width: 400px;#}
+{#    }#}
+{##}
+{#    .form-control {#}
+{#      background-color: #3b3754;#}
+{#      border: 1px solid #5c5580;#}
+{#      color: white;#}
+{#    }#}
+{##}
+{#    .form-control::placeholder {#}
+{#      color: #b0acc1;#}
+{#    }#}
+{##}
+{#    .form-control:focus {#}
+{#      background-color: #3b3754;#}
+{#      border-color: #7f00ff;#}
+{#      box-shadow: none;#}
+{#      color: white;#}
+{#    }#}
+{##}
+{#    .btn-primary {#}
+{#      background-color: #7f00ff;#}
+{#      border: none;#}
+{#      font-weight: 600;#}
+{#    }#}
+{##}
+{#    .btn-primary:hover {#}
+{#      background-color: #6b00e6;#}
+{#    }#}
+{##}
+{#    .text-center a {#}
+{#      color: #a2d2ff;#}
+{#      text-decoration: none;#}
+{#    }#}
+{##}
+{#    .text-center a:hover {#}
+{#      text-decoration: underline;#}
+{#    }#}
+{##}
+{#    @media (max-width: 768px) {#}
+{#      .container-fluid {#}
+{#        flex-direction: column;#}
+{#      }#}
+{##}
+{#      .left-panel, .right-panel {#}
+{#        flex: none;#}
+{#        width: 100%;#}
+{#        height: 50vh;#}
+{#      }#}
+{##}
+{#      .left-panel {#}
+{#        align-items: center;#}
+{#        justify-content: center;#}
+{#      }#}
+{##}
+{#      .left-panel h4 {#}
+{#        font-size: 16px;#}
+{#      }#}
+{#    }#}
+{#  </style>#}
+{#</head>#}
+{#<body>#}
+{##}
+{#<div class="container-fluid">#}
+{#  <!-- Left Image/Intro Panel -->#}
+{#  <div class="left-panel">#}
+{#    <h4>Capturing Moments, <br>Creating Memories</h4>#}
+{#  </div>#}
+{##}
+{#  <!-- Right Form Panel -->#}
+{#  <div class="right-panel">#}
+{#    <div class="form-container">#}
+{#      <h2 class="text-center mb-4">Login</h2>#}
+{#      <form method="post" action="/myapp/login_post/">#}
+{#        {% csrf_token %}#}
+{#        <div class="form-group">#}
+{#          <label for="username">Username</label>#}
+{#          <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" required>#}
+{#        </div>#}
+{#        <div class="form-group">#}
+{#          <label for="password">Password</label>#}
+{#          <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>#}
+{#        </div>#}
+{#        <button type="submit" class="btn btn-primary btn-block">Login</button>#}
+{#      </form>#}
+{#      <div class="text-center mt-3">#}
+{#        <a href="#">Forgot Password?</a>#}
+{#      </div>#}
+{#    </div>#}
+{#  </div>#}
+{#</div>#}
+{##}
+{#<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>#}
+{#<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>#}
+{#<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>#}
+{##}
+{#</body>#}
+{#</html>#}
